@@ -7,7 +7,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 # Opciones de Chrome
@@ -20,11 +19,11 @@ chrome_options.add_argument("--disable-gpu")  # Esta opción es necesaria para e
 driver = webdriver.Chrome(options=chrome_options)
 
 def express(card, date, cvv):
-    driver.get("https://www.express.com/clothing/men/pocket-crew-neck-perfect-pima-cotton-long-sleeve-t-shirt/pro/05739879/color/Ruby/e/regular/size/l/")
+    driver.get("https://www.express.com/clothing/men/pocket-crew-neck-perfect-pima-cotton-long-sleeve-t-shirt/pro/05739879/color/Oyster/e/regular/size/xxl/")
     # Cierra la ventana de cookies
     try:
         # Intenta encontrar y hacer clic en el botón 'No thanks' si está presente
-        no_thanks_button = WebDriverWait(driver, 7).until(
+        no_thanks_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton"))
         )
         no_thanks_button.click()
@@ -32,27 +31,33 @@ def express(card, date, cvv):
         # Si el botón 'No thanks' no está presente o no es clickeable, ignora la excepción y continúa
         print("")
     
-    WebDriverWait(driver, 7).until(
+    WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.ID, 'onetrust-close-btn-container'))
     ).click()
 
-    time.sleep(2)
-    driver.execute_script('document.querySelector("button[unbxdattr=\'AddToCart\']").click();')
-    print("Se hizo clic en el botón 'Agregar al carrito' de forma forzosa.")
-    
+    try:
+        time.sleep(2.5)
+        driver.execute_script('document.querySelector("button[unbxdattr=\'AddToCart\']").click();')
+        print("Se hizo clic en el botón 'Agregar al carrito' de forma forzosa.")
+    except TimeoutException:
+        driver.get("https://www.express.com/clothing/men/pocket-crew-neck-perfect-pima-cotton-long-sleeve-t-shirt/pro/05739879/color/Pine/e/regular/size/xs/")
+        time.sleep(2.5)
+        driver.execute_script('document.querySelector("button[unbxdattr=\'AddToCart\']").click();')
+        print("Se hizo clic en el botón 'Agregar al carrito' de forma forzosa.")
+
     #cerrar_mensaje(driver)
     driver.get("https://express.com/bag")
 
     # Espera hasta que el botón 'continue-to-checkout' sea clickeable
-    time.sleep(2)
+    time.sleep(2.5)
     driver.execute_script('document.querySelector("#continue-to-checkout").click();')
     print("Se hizo clic en el botón de 'Continuar con el pago' de forma forzosa.")
 
     #cerrar_mensaje(driver)
     try:
         # Intenta encontrar y hacer clic en el botón 'close' si está presente
-        button = WebDriverWait(driver, 7).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.close_button-270794-button.close_button-270794-button-d2.bluecoreCloseButton"))
+        button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "button.close_button-21001094-button.close_button-21001094-button-d2.bluecoreCloseButton"))
         )
         button.click()
     except TimeoutException:
@@ -64,7 +69,7 @@ def express(card, date, cvv):
 
     try:
         # Intenta encontrar y hacer clic en el botón 'No thanks' si está presente
-        no_thanks_button = WebDriverWait(driver, 7).until(
+        no_thanks_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton"))
         )
         no_thanks_button.click()
@@ -74,80 +79,80 @@ def express(card, date, cvv):
 
 
     #cerrar_mensaje(driver)
-    input_FirstName = WebDriverWait(driver, 7).until(
+    input_FirstName = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-firstname']"))
     )
     input_FirstName.send_keys("dsadsad")
     
-    input_LastName = WebDriverWait(driver, 7).until(
+    input_LastName = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-lastname']"))
     )
     input_LastName.send_keys("dsadsad")
     
-    input_mail = WebDriverWait(driver, 7).until(
+    input_mail = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-email']"))
     )
     input_mail.send_keys("dawdwafafw@gmail.com")
     
-    input_Confirmmail = WebDriverWait(driver, 7).until(
+    input_Confirmmail = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-confirmemail']"))
     )
     input_Confirmmail.send_keys("dawdwafafw@gmail.com")
     
-    input_number = WebDriverWait(driver, 7).until(
+    input_number = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ r3Bel' and @id='contact-information-phone']"))
     )
     input_number.send_keys("(213) 231-2321")
     
-    WebDriverWait(driver, 7).until(
+    WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT XeI2t' and not(@aria-label)]"))
     ).click()
 
     #cerrar_mensaje(driver)
-    input_street = WebDriverWait(driver, 7).until(
+    input_street = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ QmZ+J' and @id='shipping.line1']"))
     )
     input_street.send_keys("dwqdqwfqwfqwfqw")
     
-    input_zipcode = WebDriverWait(driver, 7).until(
+    input_zipcode = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ n9hK0' and @id='shipping.postalCode']"))
     )
     input_zipcode.send_keys("231232")
     
-    input_city = WebDriverWait(driver, 7).until(
+    input_city = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.XPATH, "//input[@class='C-KSdhEJ vwtDb' and @id='shipping.city']"))
     )
     input_city.send_keys("dawdsaf")
     
-    WebDriverWait(driver, 7).until(
+    WebDriverWait(driver, 10).until(
     EC.element_to_be_clickable((By.XPATH, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]"))
     ).click()
     
-    WebDriverWait(driver, 7).until(
+    WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2' and not(@aria-label)]"))
     ).click()
 
     #cerrar_mensaje(driver)
-
+    time.sleep(2.5)
     try:
         # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
-        WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "aurusIframe")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "aurusIframe")))
         driver.switch_to.frame("aurusIframe")
         
         # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
-        input_card = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "cNumber")))
+        input_card = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "cNumber")))
         input_card.clear()
         for digit in card:  # Ingresar cada dígito de la tarjeta uno por uno
             input_card.send_keys(digit)
             time.sleep(0.2)  # Espera medio segundo entre cada dígito
     
-        input_date = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "exDate")))
+        input_date = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "exDate")))
         input_date.clear()
         for digit in date:  # Ingresar cada dígito de la fecha uno por uno
             input_date.send_keys(digit)
             time.sleep(0.2)  # Espera medio segundo entre cada dígito
     
-        input_cvv = WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.ID, "secCode")))
+        input_cvv = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "secCode")))
         input_cvv.clear()
         for digit in cvv:  # Ingresar cada dígito del CVV uno por uno
             input_cvv.send_keys(digit)
@@ -162,7 +167,7 @@ def express(card, date, cvv):
     #cerrar_mensaje(driver)
     try:
         # Espera hasta que el botón con las clases especificadas y sin un atributo aria-label sea clickeable
-        button = WebDriverWait(driver, 7).until(
+        button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'VgwgDBBL') and contains(@class, 'i31kbSky') and contains(@class, 'a-YwkJU2') and contains(@class, '_0TgAT') and not(@aria-label)]"))
         )
         # Hacer clic en el botón
@@ -172,7 +177,7 @@ def express(card, date, cvv):
         
     try:
         # Espera hasta que el botón con las clases especificadas sea clickeable
-        button = WebDriverWait(driver, 7).until(
+        button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.CSS_SELECTOR, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK"))
         )
         # Hacer clic en el botón
@@ -184,7 +189,7 @@ def express(card, date, cvv):
     #cerrar_mensaje(driver)
     try:
         # Verifica si el encabezado 'Delivery Details' está presente
-        WebDriverWait(driver, 7).until(
+        WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//h2[contains(@class, 'lixW-')]"))
         )
 
@@ -200,7 +205,7 @@ def express(card, date, cvv):
 
 def cerrar_mensaje(driver):
     try:
-        WebDriverWait(driver, 7).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".icon-close")))
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".icon-close")))
         driver.execute_script('document.querySelector(".icon-close").click();')
         print("Diálogo cerrado.")
     except Exception as e:
@@ -255,7 +260,7 @@ def main():
 
     for card, date, cvv in credenciales:
         express(card, date, cvv)
-        time.sleep(1)  # Retardo entre cada intento de inicio de sesión
+        time.sleep(2.5)  # Retardo entre cada intento de inicio de sesión
 
     driver.quit()
 
