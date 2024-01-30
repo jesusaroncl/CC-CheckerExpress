@@ -33,7 +33,7 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.minimize_window()
 
 def express(card, date, cvv):
-    driver.get("https://www.express.com/clothing/men/pocket-crew-neck-perfect-pima-cotton-long-sleeve-t-shirt/pro/05739879/color/Oyster/e/regular/size/xxl/")
+    driver.get("https://www.express.com/clothing/men/phoenix-paisley-dress-socks/pro/04626303/color/Pitch%20Black/")
     # Cierra la ventana de cookies
     try:
             # Intenta encontrar y hacer clic en el botón 'No thanks' si está presente
@@ -59,7 +59,7 @@ def express(card, date, cvv):
         driver.execute_script('document.querySelector("button[unbxdattr=\'AddToCart\']").click();')
         #print("Se hizo clic en el botón 'Agregar al carrito' de forma forzosa.")
     except TimeoutException as e:
-        driver.get("https://www.express.com/clothing/men/pocket-crew-neck-perfect-pima-cotton-long-sleeve-t-shirt/pro/05739879/color/Pine/e/regular/size/xs/")
+        driver.get("https://www.express.com/clothing/men/red-paisley-dress-socks/pro/04626305/color/BURGUNDY/")
         time.sleep(1)
         driver.execute_script('document.querySelector("button[unbxdattr=\'AddToCart\']").click();')
         #print("Se hizo clic en el botón 'Agregar al carrito' de forma forzosa.")
@@ -228,46 +228,24 @@ def express(card, date, cvv):
          input_card.clear()
          for digit in card:  # Ingresar cada dígito de la tarjeta uno por uno
              input_card.send_keys(digit)
-             time.sleep(0.1)  # Espera medio segundo entre cada dígito
+             time.sleep(0.2)  # Espera medio segundo entre cada dígito
      
          input_date = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "exDate")))
          input_date.clear()
          for digit in date:  # Ingresar cada dígito de la fecha uno por uno
              input_date.send_keys(digit)
-             time.sleep(0.1)  # Espera medio segundo entre cada dígito
+             time.sleep(0.2)  # Espera medio segundo entre cada dígito
      
          input_cvv = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "secCode")))
          input_cvv.clear()
          for digit in cvv:  # Ingresar cada dígito del CVV uno por uno
              input_cvv.send_keys(digit)
-             time.sleep(0.1)  # Espera medio segundo entre cada dígito
+             time.sleep(0.2)  # Espera medio segundo entre cada dígito
          
          driver.switch_to.default_content()
             
-    except TimeoutException as e:
-        WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "aurusIframe")))
-        driver.switch_to.frame("aurusIframe")
-        
-        # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
-        input_card = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "cNumber")))
-        input_card.clear()
-        for digit in card:  # Ingresar cada dígito de la tarjeta uno por uno
-            input_card.send_keys(digit)
-            time.sleep(0.1)  # Espera medio segundo entre cada dígito
-    
-        input_date = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "exDate")))
-        input_date.clear()
-        for digit in date:  # Ingresar cada dígito de la fecha uno por uno
-            input_date.send_keys(digit)
-            time.sleep(0.1)  # Espera medio segundo entre cada dígito
-    
-        input_cvv = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "secCode")))
-        input_cvv.clear()
-        for digit in cvv:  # Ingresar cada dígito del CVV uno por uno
-            input_cvv.send_keys(digit)
-            time.sleep(0.1)  # Espera medio segundo entre cada dígito
-        
-        driver.switch_to.default_content()
+    except TimeoutException:
+        pass
     #   print("El elemento no fue encontrado en el tiempo establecido: ", e)
     try:
         # Espera hasta que el botón con las clases especificadas y sin un atributo aria-label sea clickeable
@@ -278,7 +256,32 @@ def express(card, date, cvv):
         button.click()
     except TimeoutException:
     #    print("El botón no fue encontrado o no era clickeable en el tiempo establecido.")
-        button = WebDriverWait(driver, 4).until(
+                 # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
+        WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "aurusIframe")))
+        driver.switch_to.frame("aurusIframe")
+        
+        # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
+        input_card = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "cNumber")))
+        input_card.clear()
+        for digit in card:  # Ingresar cada dígito de la tarjeta uno por uno
+            input_card.send_keys(digit)
+            time.sleep(0.2)  # Espera medio segundo entre cada dígito
+    
+        input_date = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "exDate")))
+        input_date.clear()
+        for digit in date:  # Ingresar cada dígito de la fecha uno por uno
+            input_date.send_keys(digit)
+            time.sleep(0.2)  # Espera medio segundo entre cada dígito
+    
+        input_cvv = WebDriverWait(driver, 4).until(EC.presence_of_element_located((By.ID, "secCode")))
+        input_cvv.clear()
+        for digit in cvv:  # Ingresar cada dígito del CVV uno por uno
+            input_cvv.send_keys(digit)
+            time.sleep(0.2)  # Espera medio segundo entre cada dígito
+        
+        driver.switch_to.default_content()
+
+        button = WebDriverWait(driver, 7).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(@class, 'VgwgDBBL') and contains(@class, 'i31kbSky') and contains(@class, 'a-YwkJU2') and contains(@class, '_0TgAT') and not(@aria-label)]"))
         )
         # Hacer clic en el botón
