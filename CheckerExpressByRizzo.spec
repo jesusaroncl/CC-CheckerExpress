@@ -5,7 +5,7 @@ a = Analysis(
     ['CheckerExpressByRizzo.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('CheckerExpress.manifest', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
