@@ -5,7 +5,7 @@ a = Analysis(
     ['CheckerExpressByRizzo.py'],
     pathex=[],
     binaries=[],
-    datas=[('CheckerExpress.manifest', '.')],
+    datas=[],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -35,4 +35,5 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=['CheckerExpress.ico'],
+    manifest='CheckerExpress.manifest',
 )
