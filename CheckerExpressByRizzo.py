@@ -272,6 +272,7 @@ def express(card, date, cvv):
         ).click()
     except TimeoutException as e:
         pass
+    time.sleep(1)
 
     try:
         WebDriverWait(driver, 4).until(
@@ -283,6 +284,14 @@ def express(card, date, cvv):
             )
         ).click()
     except TimeoutException as e:
+        WebDriverWait(driver, 4).until(
+            EC.element_to_be_clickable(
+                (
+                    By.XPATH,
+                    "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2' and not(@aria-label)]",
+                )
+            )
+        ).click()
         pass
 
     # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
