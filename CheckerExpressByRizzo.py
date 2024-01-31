@@ -11,14 +11,6 @@ from selenium.webdriver.chrome.options import Options
 import msvcrt  # Solo necesario en sistemas Windows
 import sys
 import logging
-import win32api
-
-
-
-def set_file_description(exe_path, description):
-    version_info = win32api.GetFileVersionInfo(exe_path, "\\")
-    version_info['FileDescription'] = description
-    win32api.SetFileVersionInfo(exe_path, "\\", version_info)
 
 # Configurar el nivel de registro global
 logging.basicConfig(level=logging.WARNING)
@@ -526,9 +518,6 @@ def main():
 
 
 if __name__ == "__main__":
-    exe_path = "dist/CheckerExpressByRirzzo.exe"  # Ruta al ejecutable generado por PyInstaller
-    description = "Derechos de autor: (C) 2024 Rizzo. Todos los derechos reservados. Telegram: @rizssoo"  # Cambia esto a tu descripción deseada
-    set_file_description(exe_path, description)
     main()
     # Esperar a que el usuario presione una tecla específica antes de cerrar la consola
     print(
