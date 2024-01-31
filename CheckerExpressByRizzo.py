@@ -44,7 +44,7 @@ def express(card, date, cvv):
         )
     except:
         driver.get(
-            "https://www.express.com/clothing/men/phoenix-paisley-dress-socks/pro/04626303/color/Pitch%20Black/"
+            "https://www.express.com/clothing/men/red-paisley-dress-socks/pro/04626305/color/BURGUNDY/"
         )
     # Cierra la ventana de cookies
 
@@ -64,16 +64,18 @@ def express(card, date, cvv):
         pass
 
     try:
+        time.sleep(1)
         driver.execute_script(
             "document.querySelector('.onetrust-close-btn-handler').click();"
         )
     except TimeoutException as e:
-        WebDriverWait(driver, 4)
+        time.sleep(1)
         driver.execute_script(
             "document.querySelector('.onetrust-close-btn-handler').click();"
         )
 
     try:
+        time.sleep(0.5)
         driver.execute_script(
             "document.querySelector(\"button[unbxdattr='AddToCart']\").click();"
         )
@@ -82,7 +84,7 @@ def express(card, date, cvv):
         driver.get(
             "https://www.express.com/clothing/men/red-paisley-dress-socks/pro/04626305/color/BURGUNDY/"
         )
-        WebDriverWait(driver, 4)
+        time.sleep(0.5)
         driver.execute_script(
             "document.querySelector(\"button[unbxdattr='AddToCart']\").click();"
         )
