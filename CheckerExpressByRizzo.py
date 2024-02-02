@@ -300,7 +300,7 @@ def express(card, date, cvv):
             )
             break  # Sale del bucle si el clic tiene éxito
         except JavascriptException:
-            pass
+            continue
 
     # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
     try:
@@ -309,6 +309,7 @@ def express(card, date, cvv):
         )
         driver.switch_to.frame("aurusIframe")
     except TimeoutException:
+        time.sleep(0.5)
         driver.execute_script("document.querySelector('.CFFMr button.btn').click();")
 
         try:
