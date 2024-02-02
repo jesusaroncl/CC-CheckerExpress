@@ -256,73 +256,76 @@ def express(card, date, cvv):
         except TimeoutException as e:
             retry_flag = True
 
-
-    try:
-        input_zipcode = WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//input[@class='C-KSdhEJ n9hK0' and @id='shipping.postalCode']",
-                )
-            )
-        )
-        input_zipcode.send_keys("231232")
-    except TimeoutException as e:
-        pass
-
-    try:
-        input_city = WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "//input[@class='C-KSdhEJ vwtDb' and @id='shipping.city']")
-            )
-        )
-        input_city.send_keys("dawdsaf")
-    except TimeoutException as e:
-        pass
-
-    try:
-        WebDriverWait(driver, 4).until(
-            EC.element_to_be_clickable(
-                (
-                    By.XPATH,
-                    "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]",
-                )
-            )
-        ).click()
-    except TimeoutException as e:
-        pass
-
-    for _ in range(3):
+    
         try:
-            time.sleep(0.5)
-            driver.execute_script(
-                "document.querySelector('.CFFMr button.btn').click();"
+            input_zipcode = WebDriverWait(driver, 4).until(
+                EC.presence_of_element_located(
+                    (
+                        By.XPATH,
+                        "//input[@class='C-KSdhEJ n9hK0' and @id='shipping.postalCode']",
+                    )
+                )
             )
-            break  # Sale del bucle si el clic tiene éxito
-        except JavascriptException:
-            continue
-
-    # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
-    try:
-        WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located((By.ID, "aurusIframe"))
-        )
-        driver.switch_to.frame("aurusIframe")
-    except TimeoutException:
-        time.sleep(0.5)
-        driver.execute_script("document.querySelector('.CFFMr button.btn').click();")
-
+            input_zipcode.send_keys("231232")
+        except TimeoutException as e:
+            pass
+    
+        try:
+            input_city = WebDriverWait(driver, 4).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, "//input[@class='C-KSdhEJ vwtDb' and @id='shipping.city']")
+                )
+            )
+            input_city.send_keys("dawdsaf")
+        except TimeoutException as e:
+            pass
+    
+        try:
+            WebDriverWait(driver, 4).until(
+                EC.element_to_be_clickable(
+                    (
+                        By.XPATH,
+                        "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]",
+                    )
+                )
+            ).click()
+        except TimeoutException as e:
+            pass
+    
+        for _ in range(3):
+            try:
+                time.sleep(0.5)
+                driver.execute_script(
+                    "document.querySelector('.CFFMr button.btn').click();"
+                )
+                break  # Sale del bucle si el clic tiene éxito
+            except JavascriptException:
+                continue
+    
+        # Esperar hasta que el iframe esté presente y luego cambiar al iframe por ID
         try:
             WebDriverWait(driver, 4).until(
                 EC.presence_of_element_located((By.ID, "aurusIframe"))
             )
             driver.switch_to.frame("aurusIframe")
         except TimeoutException:
-            driver.refresh()
-            WebDriverWait(driver, 4).until(
-                EC.presence_of_element_located((By.ID, "aurusIframe"))
-            )
-            driver.switch_to.frame("aurusIframe")
+            time.sleep(0.5)
+            driver.execute_script("document.querySelector('.CFFMr button.btn').click();")
+            try:
+                WebDriverWait(driver, 4).until(
+                    EC.presence_of_element_located((By.ID, "aurusIframe"))
+                )
+                driver.switch_to.frame("aurusIframe")
+                retry_flag=False
+            except TimeoutException:
+                try:
+                    WebDriverWait(driver, 10).until(
+                       EC.presence_of_element_located((By.XPATH, "//p[@class='bodyError M6lgG']"))
+                    )
+                    retry_flag=True
+                except:
+                    retry_flag=True
+
 
 
 
