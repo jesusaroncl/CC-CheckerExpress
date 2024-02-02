@@ -299,48 +299,23 @@ def express(card, date, cvv):
         driver.switch_to.frame("aurusIframe")
     except TimeoutException:
         driver.execute_script("document.querySelector('.CFFMr button.btn').click();")
-        WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located((By.ID, "aurusIframe"))
-        )
-        driver.switch_to.frame("aurusIframe")
 
-    # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
-    input_card = WebDriverWait(driver, 4).until(
-        EC.presence_of_element_located((By.ID, "cNumber"))
-    )
-    input_card.clear()
-    for digit in card:  # Ingresar cada dígito de la tarjeta uno por uno
-        input_card.send_keys(digit)
-        time.sleep(0.2)  # Espera medio segundo entre cada dígito
-    input_date = WebDriverWait(driver, 4).until(
-        EC.presence_of_element_located((By.ID, "exDate"))
-    )
-    input_date.clear()
-    for digit in date:  # Ingresar cada dígito de la fecha uno por uno
-        input_date.send_keys(digit)
-        time.sleep(0.2)  # Espera medio segundo entre cada dígito
-    input_cvv = WebDriverWait(driver, 4).until(
-        EC.presence_of_element_located((By.ID, "secCode"))
-    )
-    input_cvv.clear()
-    for digit in cvv:  # Ingresar cada dígito del CVV uno por uno
-        input_cvv.send_keys(digit)
-        time.sleep(0.2)  # Espera medio segundo entre cada dígito
-    driver.switch_to.default_content()
+        try:
+            WebDriverWait(driver, 4).until(
+                EC.presence_of_element_located((By.ID, "aurusIframe"))
+            )
+            driver.switch_to.frame("aurusIframe")
+        except TimeoutException:
+            driver.refresh()
+            WebDriverWait(driver, 4).until(
+                EC.presence_of_element_located((By.ID, "aurusIframe"))
+            )
+            driver.switch_to.frame("aurusIframe")
 
-    #   print("El elemento no fue encontrado en el tiempo establecido: ", e)
 
-    try:
-        # Esperar hasta que el botón esté presente y sea clickeable
-        driver.execute_script(
-            "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
-        )
-    except TimeoutException:
-        # Si el botón no está presente antes de que se alcance el tiempo de espera especificado
-        WebDriverWait(driver, 4).until(
-            EC.presence_of_element_located((By.ID, "aurusIframe"))
-        )
-        driver.switch_to.frame("aurusIframe")
+
+    Tarjetas = True
+    while Tarjetas:
         # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
         input_card = WebDriverWait(driver, 4).until(
             EC.presence_of_element_located((By.ID, "cNumber"))
@@ -364,11 +339,23 @@ def express(card, date, cvv):
             input_cvv.send_keys(digit)
             time.sleep(0.2)  # Espera medio segundo entre cada dígito
         driver.switch_to.default_content()
-        # Puedes agregar aquí las acciones que deseas realizar si el botón no está presente.
-        driver.execute_script(
-            "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
-        )
 
+    #   print("El elemento no fue encontrado en el tiempo establecido: ", e)
+
+        try:
+            # Esperar hasta que el botón esté presente y sea clickeable
+            driver.execute_script(
+                "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
+            )
+            Tarjetas = False
+        except TimeoutException:
+            # Si el botón no está presente antes de que se alcance el tiempo de espera especificado
+            WebDriverWait(driver, 4).until(
+                EC.presence_of_element_located((By.ID, "aurusIframe"))
+            )
+            driver.switch_to.frame("aurusIframe")
+            Tarjetas = True
+    
     try:
         # Espera hasta que el botón con las clases especificadas sea clickeable
         button = WebDriverWait(driver, 4).until(
