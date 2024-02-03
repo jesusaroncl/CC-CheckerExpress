@@ -125,13 +125,18 @@ def enter_input_field(driver, field_id, input_text, delay=0.2, timeout=4):
 
             input_field.clear()
 
-            # Limpiar texto de entrada de espacios y /
-            cleaned_input_text = ''.join(c for c in input_text if c.isdigit())
-            input_text_combined = cleaned_input_text.replace(" ", "").replace("/", "").strip()
+            # Verificar si el field_id es "secCode" para decidir si aplicar el formato
+            if field_id != "secCode":
+                # Limpiar texto de entrada de espacios y /
+                cleaned_input_text = ''.join(c for c in input_text if c.isdigit())
+                input_text_combined = cleaned_input_text.replace(" ", "").replace("/", "").strip()
 
-            # Modificar el formato si la longitud es de MM/YY
-            if len(cleaned_input_text) == 4:
-                input_text_combined = cleaned_input_text[:2] + "/" + cleaned_input_text[2:]
+                # Modificar el formato si la longitud es de MM/YY
+                if len(cleaned_input_text) == 4:
+                    input_text_combined = cleaned_input_text[:2] + "/" + cleaned_input_text[2:]
+            else:
+                # No aplicar formato si el field_id es "secCode"
+                input_text_combined = input_text.strip()
 
             input_field.send_keys(input_text_combined)
 
@@ -143,6 +148,7 @@ def enter_input_field(driver, field_id, input_text, delay=0.2, timeout=4):
             pass
 
         time.sleep(delay)
+
 
 
 
