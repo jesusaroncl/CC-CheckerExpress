@@ -50,7 +50,7 @@ codigo_ascii = """
 
 
 def express(card, date, cvv):
-    print("\033[93mCalando...\033[0m", end='\r', flush=True)
+    print("\033[93mChecking...\033[0m", end='\r', flush=True)
     retry_flag = True
     while retry_flag:
         try:
@@ -106,7 +106,7 @@ def express(card, date, cvv):
 
         # cerrar_mensaje(driver)
 
-        driver.get("https://express.com/bag")
+        """        driver.get("https://express.com/bag")
         # Aquí puedes agregar las acciones adicionales que desees realizar en caso de error.
         try:
             driver.execute_script(
@@ -137,7 +137,7 @@ def express(card, date, cvv):
             )
             button.click()
         except TimeoutException as e:
-            pass
+            pass """
 
         try:
             driver.get("https://www.express.com/checkout/contact-information")
@@ -180,7 +180,7 @@ def express(card, date, cvv):
                 )
             )
             input_FirstName.send_keys("dsadsad")
-        except TimeoutError as e:
+        except TimeoutException as e:
             pass
 
         try:
@@ -417,20 +417,17 @@ def express(card, date, cvv):
             "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();"
         )
 
-        PlaceOrder = True
-        while PlaceOrder:
-            try:
-                button = WebDriverWait(driver, 4).until(
-                    EC.element_to_be_clickable(
-                        (By.CSS_SELECTOR, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
-                    )
+        try:
+            button = WebDriverWait(driver, 4).until(
+                EC.element_to_be_clickable(
+                    (By.CSS_SELECTOR, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
                 )
-                # Hacer clic en el botón
-                button.click()
-                PlaceOrder=False
-            except TimeoutException:
-                PlaceOrder = True
-            #    print("El botón 'Place Order' no fue encontrado o no era clickeable en el tiempo establecido.")
+            )
+            # Hacer clic en el botón
+            button.click()
+        except TimeoutException:
+            pass
+        #    print("El botón 'Place Order' no fue encontrado o no era clickeable en el tiempo establecido.")
 
 
     try:
