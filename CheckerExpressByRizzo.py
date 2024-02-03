@@ -36,6 +36,7 @@ driver = webdriver.Chrome(options=chrome_options)
 driver.minimize_window()
 
 derechos_de_autor = "Derechos de autor: (C) 2024 Rizzo. Todos los derechos reservados. Contacto-Telegram: @rizssoo"
+tester = "Tester: SSLJosh Contacto-Telegram: @SSLJhos101"
 codigo_ascii = """
 ░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░  ███████╗██╗░░██╗██████╗░██████╗░███████╗░██████╗░██████╗
 ██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗  ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝
@@ -279,18 +280,21 @@ def express(card, date, cvv):
             input_city.send_keys("dawdsaf")
         except TimeoutException as e:
             pass
-    
-        try:
-            WebDriverWait(driver, 4).until(
-                EC.element_to_be_clickable(
-                    (
-                        By.XPATH,
-                        "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]",
+
+
+        for _ in range(3):
+            try:
+                WebDriverWait(driver, 4).until(
+                    EC.element_to_be_clickable(
+                        (
+                            By.XPATH,
+                            "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]",
+                        )
                     )
-                )
-            ).click()
-        except TimeoutException as e:
-            pass
+                ).click()
+                break
+            except TimeoutException as e:
+                continue
     
         for _ in range(3):
             try:
@@ -355,7 +359,7 @@ def express(card, date, cvv):
             time.sleep(0.2)  # Espera medio segundo entre cada dígito
         driver.switch_to.default_content()
 
-    #   print("El elemento no fue encontrado en el tiempo establecido: ", e)
+     #   print("El elemento no fue encontrado en el tiempo establecido: ", e)
 
         try:
             # Esperar hasta que el botón esté presente y sea clickeable
@@ -560,7 +564,8 @@ def main():
     #credenciales = cargar_cards(ruta_archivo)
     # credenciales = cargar_cards('cards.txt')
     print("\033[91m" + codigo_ascii + "\033[0m")
-    print("\033[93m" + derechos_de_autor + "\n" + "\033[0m")
+    print("\033[93m" + derechos_de_autor + "\033[0m")
+    print("\033[93m" + tester + "\n" + "\033[0m")
     credenciales = cargar_cards_desde_consola()
     if credenciales is None:
         #print("Por favor, asegúrese de que el archivo este en el formato correcto")
