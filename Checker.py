@@ -10,7 +10,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 import msvcrt  # Solo necesario en sistemas Windows
 import sys
+import os
+import inquirer
 import logging
+import sqlite3
+import getpass
 from selenium.common.exceptions import JavascriptException
 # Configurar el nivel de registro global
 logging.basicConfig(level=logging.WARNING)
@@ -47,6 +51,29 @@ codigo_ascii = """
 """
 
 
+#def obtener_usuario_y_contraseña():
+#    username = input("Usuario: ")
+#    password = getpass.getpass("Contraseña: ")
+#    return username, password
+
+
+#def verificar_usuario(username, password):
+#    # Conectar a la base de datos
+#    conn = sqlite3.connect('usuarios.db')
+#    c = conn.cursor()
+#
+#    # Verificar el usuario
+#    c.execute('SELECT * FROM usuarios WHERE username = ? AND password = ?', (username, password))
+#    result = c.fetchone()
+#
+#    # Cerrar la conexión
+#    conn.close()
+#
+#    if result:
+#        return True
+#    else:
+#        return False
+    
 def execute_script_click_no_bucle(driver, script, additional_delay=0.5):
     try:
         driver.execute_script(script)
@@ -259,136 +286,181 @@ COLOR_RED = '91'
 COLOR_GREEN = '92'
 COLOR_YELLOW = '93'
 
+def seleccionar_tipo():
+    questions = [
+        inquirer.List('type',
+                      message="Elige una opción",
+                      choices=['Charged $16.79', 'Charged $16.58'],
+                      ),
+    ]
+    answers = inquirer.prompt(questions)
+    type_mapping = {
+        'Charged $16.79': '16.79',
+        'Charged $16.58': '16.58',
+    }
+    return type_mapping[answers['type']]
 
+def express(card, date, cvv, type):
+    urls_messages = {
+        "16.79": [
+            ("https://www.express.com/clothing/men/floral-dress-socks/pro/04620102/color/Pitch%20Black/", "16.79"),
+            ("https://www.express.com/clothing/men/green-clover-dress-socks/pro/04620106/color/ICED%20AQUA/", "16.79"),
+            ("https://www.express.com/clothing/men/striped-dress-socks/pro/04620101/color/NAVY/", "16.79")
 
-def express(card, date, cvv):
-    start_time = time.time()  # Guarda el tiempo de inicio
-    while True:
-        print("\033[93mIngresando...\033[0m", end='\r', flush=True)
-        driver.get("https://www.express.com/clothing/men/phoenix-paisley-dress-socks/pro/04626303/color/Pitch%20Black/")
+            # Agrega más tuplas URL-mensaje aquí
+        ],
+        "16.58": [
+            ("https://www.express.com/clothing/women/upwest-cozy-leopard-socks/pro/80157165/color/ANIMAL%20PRINT/", "16.58"),
+            # Agrega más tuplas URL-mensaje aquí
+        ],
+        # Agrega más listas de URLs aquí
+    }
+
+    urls_messages_selected = urls_messages[type] if type in urls_messages else list(urls_messages.values())[0]
+
+    mensaje(f"Seleccionando el producto de ${type}", COLOR_YELLOW)
+    
+    success = False  # Inicializa la variable de control
+    for url, message in urls_messages_selected:
+        if success:  # Si la variable de control es True, rompe el bucle for
+            break
+        start_time = time.time()  # Guarda el tiempo de inicio
         try:
-           css_click_no_bucle(driver, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton")
-        except NoSuchElementException:
-            pass
-    
-        try: #CERRAR COOKIES
-            execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
-            execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
-            mensaje("Se cerraron las cookies correctamente.", COLOR_YELLOW)
-        except JavascriptException:
-            mensaje("Hubo un error al tratar de cerrar las cookies.", COLOR_RED)
-    
-        try: #AÑADIR AL CARRITO
-            mensaje("Añadiendo al carrito...", COLOR_YELLOW)
-            execute_script_click(driver, "document.querySelector(\"button[unbxdattr='AddToCart']\").click();")
-            mensaje("Se añadió al carrito correctamente.", COLOR_YELLOW)
-        except JavascriptException:
-            mensaje("Hubo un error al tratar de añadir al carrito.", COLOR_RED)
-    
-        try:
-            driver.get("https://www.express.com/checkout/contact-information")
-            try:
-                # Intenta encontrar y hacer clic en el botón 'No thanks' si está presente
-                css_click_no_bucle(driver, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton")
-                mensaje("Colocando información...", COLOR_YELLOW)
-            except NoSuchElementException as e:
-                pass
+            while True:
+                mensaje(f"Procesando...", COLOR_YELLOW)
+                driver.get(url)
+
+                try:
+                   css_click_no_bucle(driver, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton")
+                except NoSuchElementException:
+                    pass
             
-            try: #CERRAR COOKIES
-                execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
-            except JavascriptException:
-                mensaje("Hubo un error al tratar de cerrar las cookies.", COLOR_RED)
-
-
-            time.sleep(0.2)
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-firstname']", "dsadsad")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-lastname']", "dsadsad")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-email']", "dawdwafafw@gmail.com")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-confirmemail']", "dawdwafafw@gmail.com")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ r3Bel' and @id='contact-information-phone']", "(213) 231-2321")
-            time.sleep(0.3)
-    
-            try:
-                xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT XeI2t' and not(@aria-label)]")
-            except NoSuchElementException:
-                mensaje("Hubo un error al tratar de dar click en el boton de Info contacto.", COLOR_RED)
-    
-            time.sleep(0.3)
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ QmZ+J' and @id='shipping.line1']", "dwqdqwfqwfqwfqw")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ n9hK0' and @id='shipping.postalCode']", "231232")
-            enter_text_xpath(driver, "//input[@class='C-KSdhEJ vwtDb' and @id='shipping.city']", "dawdsaf")
-            time.sleep(0.3)
-    
-            try:
-                xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]")
-                xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]")
-            except NoSuchElementException:
-                mensaje("Hubo un error al tratar de dar click en el boton de Info de direccion.", COLOR_RED)
-            try:
-                xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2']")
-                xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2']")
-            except JavascriptException:
-                mensaje("Hubo un error al tratar de dar click en el boton de Info de envio.", COLOR_RED)
+                try: #CERRAR COOKIES
+                    execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
+                    execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
+                    mensaje("Se cerraron las cookies correctamente.", COLOR_YELLOW)
+                except JavascriptException:
+                    mensaje("Hubo un error al tratar de cerrar las cookies.", COLOR_RED)
+            
+                try: #AÑADIR AL CARRITO
+                    mensaje("Añadiendo al carrito...", COLOR_YELLOW)
+                    execute_script_click(driver, "document.querySelector(\"button[unbxdattr='AddToCart']\").click();")
+                    mensaje("Se añadió al carrito correctamente.", COLOR_YELLOW)
+                except JavascriptException:
+                    mensaje("Hubo un error al tratar de añadir al carrito.", COLOR_RED)
+            
+                driver.get("https://www.express.com/checkout/contact-information")
+                try:
+                    # Intenta encontrar y hacer clic en el botón 'No thanks' si está presente
+                    css_click_no_bucle(driver, "button.fsrButton.fsrButton__inviteDecline.fsrDeclineButton")
+                    mensaje("Colocando información...", COLOR_YELLOW)
+                except NoSuchElementException as e:
+                    pass
+                
+                try: #CERRAR COOKIES
+                    execute_script_click_no_bucle(driver, "document.querySelector('.onetrust-close-btn-handler').click();")
+                except JavascriptException:
+                    mensaje("Hubo un error al tratar de cerrar las cookies.", COLOR_RED)
     
     
-    
-            for _ in range(3):
-                frame = "aurusIframe"
-                if switch_to_frame(driver, frame):
-                    enter_input_field(driver, "cNumber", card)
-                    enter_input_field(driver, "exDate", date)
-                    enter_input_field(driver, "secCode", cvv)
-                    driver.switch_to.default_content()
-                    mensaje("Datos de tarjeta ingresados!", COLOR_YELLOW)
-                    break
+                time.sleep(0.2)
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-firstname']", "dsadsad")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ YMB2H' and @id='contact-information-lastname']", "dsadsad")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-email']", "dawdwafafw@gmail.com")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ mBaDI' and @id='contact-information-confirmemail']", "dawdwafafw@gmail.com")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ r3Bel' and @id='contact-information-phone']", "(213) 231-2321")
+                time.sleep(0.3)
+        
+                try:
+                    xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT XeI2t' and not(@aria-label)]")
+                except NoSuchElementException:
+                    mensaje("Hubo un error al tratar de dar click en el boton de Info contacto.", COLOR_RED)
+        
+                time.sleep(0.3)
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ QmZ+J' and @id='shipping.line1']", "dwqdqwfqwfqwfqw")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ n9hK0' and @id='shipping.postalCode']", "231232")
+                enter_text_xpath(driver, "//input[@class='C-KSdhEJ vwtDb' and @id='shipping.city']", "dawdsaf")
+                time.sleep(0.3)
+        
+                try:
+                    xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]")
+                    xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT Rpw9i' and not(@aria-label)]")
+                except NoSuchElementException:
+                    mensaje("Hubo un error al tratar de dar click en el boton de Info de direccion.", COLOR_RED)
+                try:
+                    xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2']")
+                    xpath_click_no_bucle(driver, "//button[@class='btn VgwgDBBL i31kbSky a-YwkJU2 _0TgAT vX8Q2']")
+                except JavascriptException:
+                    mensaje("Hubo un error al tratar de dar click en el boton de Info de envio.", COLOR_RED)
+        
+        
+        
+                for _ in range(3):
+                    frame = "aurusIframe"
+                    if switch_to_frame(driver, frame):
+                        enter_input_field(driver, "cNumber", card)
+                        enter_input_field(driver, "exDate", date)
+                        enter_input_field(driver, "secCode", cvv)
+                        driver.switch_to.default_content()
+                        mensaje("Datos de tarjeta ingresados!", COLOR_YELLOW)
+                        break
+                    else:
+                        mensaje("No se pudo ingresar al frame", COLOR_RED)
                 else:
-                    mensaje("No se pudo ingresar al frame", COLOR_RED)
-            else:
-                print("\033[93mNo se pudo ingresar al frame después de 3 intentos. Volviendo a intentar...\033[0m", end='\r', flush=True)
-                driver.delete_all_cookies()
-                continue 
-    
-            try:
-                execute_script_click(driver, "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();")
-                mensaje("Datos de tarjeta guardados!", COLOR_YELLOW)
-            except JavascriptException:
-                mensaje("Hubo un error al tratar de dar click en el boton de guardar.", COLOR_RED)
-    
-            try:
-                css_click_no_bucle(driver, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
-                css_click_no_bucle(driver, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
-                mensaje("Checking...", COLOR_YELLOW)
-            except:
-                mensaje("Hubo un error al tratar de dar click en el boton de Checking.", COLOR_RED)
-    
-            try:
-                WebDriverWait(driver, 4).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, "//h2[contains(@class, 'lixW-')]")
+                    print("\033[93mNo se pudo ingresar al frame después de 3 intentos. Volviendo a intentar...\033[0m", end='\r', flush=True)
+                    driver.delete_all_cookies()
+                    continue #continua la siguiente iteracion del bucle while
+        
+                try:
+                    execute_script_click(driver, "document.querySelector(\"button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT[data-selected='false']\").click();")
+                    mensaje("Datos de tarjeta guardados!", COLOR_YELLOW)
+                except JavascriptException:
+                    mensaje("Hubo un error al tratar de dar click en el boton de guardar.", COLOR_RED)
+        
+                try:
+                    css_click_no_bucle(driver, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
+                    css_click_no_bucle(driver, "button.btn.VgwgDBBL.i31kbSky.a-YwkJU2._0TgAT.p2TWK")
+                    mensaje("Checking...", COLOR_YELLOW)
+                except:
+                    mensaje("Hubo un error al tratar de dar click en el boton de Checking.", COLOR_RED)
+        
+                try:
+                    WebDriverWait(driver, 4).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, "//h2[contains(@class, 'lixW-')]")
+                        )
                     )
-                )
-                elapsed_time = time.time() - start_time  # Calcula el tiempo transcurrido
+                    elapsed_time = time.time() - start_time  # Calcula el tiempo transcurrido
+    
+                    # print("Se encontró el encabezado 'Delivery Details'.")
+                    formatted_date = f"{date[:2]}|20{date[2:]}"
+                    print(" " * 90, end='\r')
+                    print("\033[92m" + f"{card}|{formatted_date}|{cvv}" + "\033[32m" + " ➥  " + "\033[36m" + f"{elapsed_time:.1f}s" + "\033[35m" + " - " + "\033[92m" + f"CHARGED ${message}!" + "\033[0m")
+                    driver.delete_all_cookies()
 
-                # print("Se encontró el encabezado 'Delivery Details'.")
-                formatted_date = f"{date[:2]}|20{date[2:]}"
-                print(" " * 90, end='\r')
-                print("\033[92m" + f"{card}|{formatted_date}|{cvv}" + "\033[93m" f" - Time: {elapsed_time:.1f}s" + "\033[0m")
-                driver.delete_all_cookies()
-                return True
-            except (TimeoutException, NoSuchElementException):
+                    success = True  # romper el bucle for de urls si se encuentra el encabezado
+                    break # Romper el bucle while si se encuentra el encabezado
+                except (TimeoutException, NoSuchElementException):
+    
+                    elapsed_time = time.time() - start_time  # Calcula el tiempo transcurrido
+                    formatted_date = f"{date[:2]}|20{date[2:]}"
+                    print(" " * 90, end='\r')
+                    print("\033[91m" + f"{card}|{formatted_date}|{cvv}" + "\033[31m" + " ➥  " + "\033[36m" + f"{elapsed_time:.1f}s" + "\033[0m")                   
+                    driver.delete_all_cookies()
+                    success = True  # romper el bucle for de urls si se encuentra el encabezado
+                    break # Romper el bucle while si no se encuentra el encabezado
+        except Exception as e:  # Puedes especificar el tipo de excepción si lo conoces
+            print(f"Ocurrió un error con la URL {url}: {e}")
+            continue
 
-                elapsed_time = time.time() - start_time  # Calcula el tiempo transcurrido
-                formatted_date = f"{date[:2]}|20{date[2:]}"
-                print(" " * 90, end='\r')
-                print("\033[91m" + f"{card}|{formatted_date}|{cvv}" + "\033[93m" f" - {elapsed_time:.1f}s" + "\033[0m")
-                driver.delete_all_cookies()
-                return True
-        except NoSuchElementException:
-            pass
+
 
 
 def cargar_cards_desde_consola():
     while True:
+        print("\033[91m" + codigo_ascii + "\033[0m")
+        print("\033[93m" + derechos_de_autor + "\033[0m")
+        print("\033[93m" + tester + "\n" + "\033[0m")
         print("\033[92mIngrese las tarjetas (formato: Card|MM|AAAA|CVV):\033[0m")
         credenciales = []
         try:
@@ -400,11 +472,11 @@ def cargar_cards_desde_consola():
                 partes = input_line.split("|")
                 partes = [parte.strip() for parte in partes]
 
+                # Si el formato de la tarjeta es incorrecto
                 if len(partes) != 4:
                     print("\033[91mFormato incorrecto. Debe ser 'Card|MM|AAAA|CVV'.\033[0m")
-                    print(" ")
-                    print("================================================")
-                    print(" ")
+                    time.sleep(2)  # Esperar un segundo
+                    os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar la consola
                     break  # Romper el bucle interno y solicitar nuevamente las tarjetas
 
                 card = partes[0]
@@ -423,27 +495,48 @@ def cargar_cards_desde_consola():
             break  # Romper el bucle externo si las tarjetas se ingresaron correctamente
 
     return credenciales
-    
+
+
+
+
 def main():
-    print("\033[91m" + codigo_ascii + "\033[0m")
-    print("\033[93m" + derechos_de_autor + "\033[0m")
-    print("\033[93m" + tester + "\n" + "\033[0m")
     credenciales = cargar_cards_desde_consola()
 
+    type_selected = seleccionar_tipo()
+
     for card, date, cvv in credenciales:
-        express(card, date, cvv)
+        express(card, date, cvv, type_selected)
         time.sleep(0.5)  # Retardo entre cada intento de inicio de sesión
 
-    driver.quit()
+
+#if __name__ == "__main__":
+#    while True:
+#        username, password = obtener_usuario_y_contraseña()
+#        if verificar_usuario(username, password):
+#            print('Inicio de sesión exitoso')
+#            while True: 
+#                main()
+#                print("Asegure y guarde las tarjetas. ¿Desea continuar o salir? Presione 'c' para continuar, 'q' para salir.")
+#                key = msvcrt.getch().decode("utf-8").lower()
+#                if key == "q":
+#                    sys.exit()
+#        else:
+#            print('Nombre de usuario o contraseña incorrectos. Inténtalo de nuevo.')
+#            time.sleep(1)  # Esperar un segundo
+#            os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar la consola
 
 
 if __name__ == "__main__":
-    main()
-    # Esperar a que el usuario presione una tecla específica antes de cerrar la consola
-    print(
-        "Asegure y guarde las tarjetas. Presiona la tecla 'q o Q' para cerrar la consola."
-    )
-    while True:
-        key = msvcrt.getch().decode("utf-8").lower()
-        if key == "q" or key == "Q":
-            break
+    while True: 
+        main()
+        mensaje("Asegure y guarde las tarjetas. ¿Desea continuar o salir? Presione 'c' para continuar, 'q' para salir.", COLOR_YELLOW)
+        try:
+            key = msvcrt.getch().decode("utf-8").lower()
+            if key == "q":
+                driver.quit()
+                os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar la consola
+                sys.exit()
+        except UnicodeDecodeError:
+            continue  # Ignorar el error y continuar con la siguiente iteración del bucle
+
+        os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar la consola
