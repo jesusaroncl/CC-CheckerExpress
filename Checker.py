@@ -318,10 +318,9 @@ def express(card, date, cvv, type):
 
     urls_messages_selected = urls_messages[type] if type in urls_messages else list(urls_messages.values())[0]
 
-    mensaje(f"Seleccionando el producto de ${type}", COLOR_YELLOW)
-    
     success = False  # Inicializa la variable de control
     for url, message in urls_messages_selected:
+        mensaje(f"Seleccionando el producto de ${type} de la url ${url}", COLOR_YELLOW)
         if success:  # Si la variable de control es True, rompe el bucle for
             break
         start_time = time.time()  # Guarda el tiempo de inicio
@@ -449,8 +448,8 @@ def express(card, date, cvv, type):
                     driver.delete_all_cookies()
                     success = True  # romper el bucle for de urls si se encuentra el encabezado
                     break # Romper el bucle while si no se encuentra el encabezado
-        except Exception as e:  # Puedes especificar el tipo de excepción si lo conoces
-            print(f"Ocurrió un error con la URL {url}: {e}")
+        except Exception:  # Puedes especificar el tipo de excepción si lo conoces
+            mensaje(f"Ocurrió un error con la URL {url}, intentando con la siguiente...", COLOR_RED)
             continue
 
 
