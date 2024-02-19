@@ -41,15 +41,30 @@ driver.minimize_window()
 
 derechos_de_autor = "Derechos de autor: (C) 2024 Rizzo. Todos los derechos reservados. Contacto-Telegram: @rizssoo"
 tester = "Tester: SSLJosh Contacto-Telegram: @SSLJhos101"
-codigo_ascii = """
-░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░  ███████╗██╗░░██╗██████╗░██████╗░███████╗░██████╗░██████╗
-██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗  ██╔════╝╚██╗██╔╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔════╝
-██║░░╚═╝███████║█████╗░░██║░░╚═╝█████═╝░█████╗░░██████╔╝  █████╗░░░╚███╔╝░██████╔╝██████╔╝█████╗░░╚█████╗░╚█████╗░
-██║░░██╗██╔══██║██╔══╝░░██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗  ██╔══╝░░░██╔██╗░██╔═══╝░██╔══██╗██╔══╝░░░╚═══██╗░╚═══██╗
-╚█████╔╝██║░░██║███████╗╚█████╔╝██║░╚██╗███████╗██║░░██║  ███████╗██╔╝╚██╗██║░░░░░██║░░██║███████╗██████╔╝██████╔╝
-░╚════╝░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝  ╚══════╝╚═╝░░╚═╝╚═╝░░░░░╚═╝░░╚═╝╚══════╝╚═════╝░╚═════╝░
+codigo_ascii_charged = """
+░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░  ░█████╗░██╗░░██╗░█████╗░██████╗░░██████╗░███████╗██████╗░
+██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗  ██╔══██╗██║░░██║██╔══██╗██╔══██╗██╔════╝░██╔════╝██╔══██╗
+██║░░╚═╝███████║█████╗░░██║░░╚═╝█████═╝░█████╗░░██████╔╝  ██║░░╚═╝███████║███████║██████╔╝██║░░██╗░█████╗░░██║░░██║
+██║░░██╗██╔══██║██╔══╝░░██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗  ██║░░██╗██╔══██║██╔══██║██╔══██╗██║░░╚██╗██╔══╝░░██║░░██║
+╚█████╔╝██║░░██║███████╗╚█████╔╝██║░╚██╗███████╗██║░░██║  ╚█████╔╝██║░░██║██║░░██║██║░░██║╚██████╔╝███████╗██████╔╝
+░╚════╝░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝  ░╚════╝░╚═╝░░╚═╝╚═╝░░╚═╝╚═╝░░╚═╝░╚═════╝░╚══════╝╚═════╝░
 """
-
+codigo_ascii_auth = """
+░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░  ░█████╗░██╗░░░██╗████████╗██╗░░██╗
+██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗  ██╔══██╗██║░░░██║╚══██╔══╝██║░░██║
+██║░░╚═╝███████║█████╗░░██║░░╚═╝█████═╝░█████╗░░██████╔╝  ███████║██║░░░██║░░░██║░░░███████║
+██║░░██╗██╔══██║██╔══╝░░██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗  ██╔══██║██║░░░██║░░░██║░░░██╔══██║
+╚█████╔╝██║░░██║███████╗╚█████╔╝██║░╚██╗███████╗██║░░██║  ██║░░██║╚██████╔╝░░░██║░░░██║░░██║
+░╚════╝░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝  ╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░╚═╝░░╚═╝
+"""
+codigo_ascii_checker = """
+░█████╗░██╗░░██╗███████╗░█████╗░██╗░░██╗███████╗██████╗░
+██╔══██╗██║░░██║██╔════╝██╔══██╗██║░██╔╝██╔════╝██╔══██╗
+██║░░╚═╝███████║█████╗░░██║░░╚═╝█████═╝░█████╗░░██████╔╝
+██║░░██╗██╔══██║██╔══╝░░██║░░██╗██╔═██╗░██╔══╝░░██╔══██╗
+╚█████╔╝██║░░██║███████╗╚█████╔╝██║░╚██╗███████╗██║░░██║
+░╚════╝░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░╚═╝╚══════╝╚═╝░░╚═╝
+"""
 
 #def obtener_usuario_y_contraseña():
 #    username = input("Usuario: ")
@@ -142,18 +157,18 @@ def css_click(driver, selector, by=By.CSS_SELECTOR, delay_between_attempts=1):
 
 
 
-def enter_input_field(driver, field_id, input_text, delay=0.2, timeout=4):
+def enter_input_field(driver, selector, input_text, by=By.ID, delay=0.2, timeout=4):
     while True:
         try:
-            # Esperar a que el elemento input sea localizable por su ID y luego obtenerlo
+            # Esperar a que el elemento input sea localizable por su selector y luego obtenerlo
             input_field = WebDriverWait(driver, timeout).until(
-                EC.presence_of_element_located((By.ID, field_id))
+                EC.presence_of_element_located((by, selector))
             )
 
             input_field.clear()
 
-            # Verificar si el field_id es "secCode" para decidir si aplicar el formato
-            if field_id != "secCode":
+            # Verificar si el selector es "secCode" para decidir si aplicar el formato
+            if selector != "secCode" or selector != '//input[@name="cvc"]':
                 # Limpiar texto de entrada de espacios y /
                 cleaned_input_text = ''.join(c for c in input_text if c.isdigit())
                 input_text_combined = cleaned_input_text.replace(" ", "").replace("/", "").strip()
@@ -162,7 +177,7 @@ def enter_input_field(driver, field_id, input_text, delay=0.2, timeout=4):
                 if len(cleaned_input_text) == 4:
                     input_text_combined = cleaned_input_text[:2] + "/" + cleaned_input_text[2:]
             else:
-                # No aplicar formato si el field_id es "secCode"
+                # No aplicar formato si el selector es "secCode"
                 input_text_combined = input_text.strip()
 
             input_field.send_keys(input_text_combined)
@@ -175,8 +190,6 @@ def enter_input_field(driver, field_id, input_text, delay=0.2, timeout=4):
             pass
 
         time.sleep(delay)
-
-
 
 
 
@@ -278,7 +291,7 @@ def switch_to_frame(driver, locator, by=By.ID, timeout=4):
 
 def mensaje(message, color_code):
     colored_message = f"\033[{color_code}m{message}\033[0m"
-    print(" " * 90, end='\r')
+    print(" " * 110, end='\r')
     print(colored_message, end='\r', flush=True)
 
 # Códigos de colores ANSI
@@ -286,19 +299,41 @@ COLOR_RED = '91'
 COLOR_GREEN = '92'
 COLOR_YELLOW = '93'
 
-def seleccionar_tipo():
-    questions = [
-        inquirer.List('type',
-                      message="Elige una opción",
-                      choices=['Charged $16.79', 'Charged $16.58'],
-                      ),
-    ]
-    answers = inquirer.prompt(questions)
-    type_mapping = {
-        'Charged $16.79': '16.79',
-        'Charged $16.58': '16.58',
-    }
-    return type_mapping[answers['type']]
+def seleccionar_tipo(checker):
+
+    if checker == "menu":
+        questions = [
+            inquirer.List('option',
+                          message="Elige tipo de Checker",
+                          choices=['Charged', 'Auth'],
+                          ),
+        ]
+        answers = inquirer.prompt(questions)
+        return answers['option']
+
+    if checker == "Charged":
+        questions = [
+            inquirer.List('type',
+                          message="Elige una opción",
+                          choices=['Express $16.79', 'Express $16.58'],
+                          ),
+        ]
+        answers = inquirer.prompt(questions)
+        type_mapping = {
+            'Express $16.79': '16.79',
+            'Express $16.58': '16.58',
+        }
+        return type_mapping[answers['type']]
+    
+    if checker == "auth":
+        questions = [
+            inquirer.List('type',
+                          message="Elige una opción",
+                          choices=['Braint', 'xd'],
+                          ),
+        ]
+        answers = inquirer.prompt(questions)
+        return answers['type']
 
 def express(card, date, cvv, type):
     urls_messages = {
@@ -320,12 +355,13 @@ def express(card, date, cvv, type):
 
     success = False  # Inicializa la variable de control
     for url, message in urls_messages_selected:
-        mensaje(f"Seleccionando el producto de ${type} de la url ${url}", COLOR_YELLOW)
+
         if success:  # Si la variable de control es True, rompe el bucle for
             break
         start_time = time.time()  # Guarda el tiempo de inicio
         try:
             while True:
+                mensaje(f"${type} Url: ${url}", COLOR_YELLOW)
                 mensaje(f"Procesando...", COLOR_YELLOW)
                 driver.get(url)
 
@@ -455,8 +491,13 @@ def express(card, date, cvv, type):
 
 
 
-def cargar_cards_desde_consola():
+def cargar_cards_desde_consola(typeSelected):
     while True:
+
+        if typeSelected == "Charged":
+            codigo_ascii = codigo_ascii_charged
+        if typeSelected == "Auth":
+            codigo_ascii = codigo_ascii_auth
         print("\033[91m" + codigo_ascii + "\033[0m")
         print("\033[93m" + derechos_de_autor + "\033[0m")
         print("\033[93m" + tester + "\n" + "\033[0m")
@@ -499,13 +540,19 @@ def cargar_cards_desde_consola():
 
 
 def main():
-    credenciales = cargar_cards_desde_consola()
+    print("\033[91m" + codigo_ascii_checker + "\033[0m")
+    print("\033[93m" + derechos_de_autor + "\033[0m")
+    print("\033[93m" + tester + "\n" + "\033[0m")
+    option = seleccionar_tipo("menu")
+   
+    if option == "Charged":
+        os.system('cls' if os.name == 'nt' else 'clear')  # Limpiar la consola
+        credenciales = cargar_cards_desde_consola(option)
+        type_selected = seleccionar_tipo("Charged")
 
-    type_selected = seleccionar_tipo()
-
-    for card, date, cvv in credenciales:
-        express(card, date, cvv, type_selected)
-        time.sleep(0.5)  # Retardo entre cada intento de inicio de sesión
+        for card, date, cvv in credenciales:
+            express(card, date, cvv, type_selected)
+            time.sleep(0.5)  # Retardo entre cada intento de inicio de sesión
 
 
 #if __name__ == "__main__":
