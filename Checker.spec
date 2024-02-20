@@ -1,11 +1,10 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['Checker.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('C:\\Users\\gonza\\OneDrive\\Documentos\\GitHub\\Repository\\dist\\CheckerProtect.py', '_obf')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -34,6 +33,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon=['CheckerExpress.ico'],
+    icon='CheckerExpress.ico',
     manifest='CheckerExpress.manifest',
 )
