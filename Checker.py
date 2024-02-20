@@ -1,9 +1,9 @@
 import time
 import tkinter as tk
-from tkinter import filedialog, simpledialog
+#from tkinter import filedialog, simpledialog
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
+#from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -13,8 +13,9 @@ import sys
 import os
 import inquirer
 import logging
-import sqlite3
-import getpass
+#import sqlite3
+#import getpass
+import random
 from selenium.common.exceptions import JavascriptException
 # Configurar el nivel de registro global
 logging.basicConfig(level=logging.WARNING)
@@ -315,13 +316,12 @@ def seleccionar_tipo(checker):
         questions = [
             inquirer.List('type',
                           message="Elige una opción",
-                          choices=['Express $16.79', 'Express $16.58'],
+                          choices=['Express [$7 - $30]'],
                           ),
         ]
         answers = inquirer.prompt(questions)
         type_mapping = {
-            'Express $16.79': '16.79',
-            'Express $16.58': '16.58',
+            'Express [$7 - $30]': 'express'
         }
         return type_mapping[answers['type']]
     
@@ -337,31 +337,33 @@ def seleccionar_tipo(checker):
 
 def express(card, date, cvv, type):
     urls_messages = {
-        "16.79": [
-            ("https://www.express.com/clothing/men/floral-dress-socks/pro/04620102/color/Pitch%20Black/", "16.79"),
-            ("https://www.express.com/clothing/men/green-clover-dress-socks/pro/04620106/color/ICED%20AQUA/", "16.79"),
-            ("https://www.express.com/clothing/men/striped-dress-socks/pro/04620101/color/NAVY/", "16.79")
+        "express": [
+            ("https://www.express.com/clothing/men/floral-dress-socks/pro/04620102/color/Pitch%20Black/", "15.20"),
+            ("https://www.express.com/clothing/men/green-clover-dress-socks/pro/04620106/color/ICED%20AQUA/", "15.20"),
+            ("https://www.express.com/clothing/men/striped-dress-socks/pro/04620101/color/NAVY/", "15.20")
 
             # Agrega más tuplas URL-mensaje aquí
-        ],
-        "16.58": [
-            ("https://www.express.com/clothing/women/upwest-cozy-leopard-socks/pro/80157165/color/ANIMAL%20PRINT/", "16.58"),
-            # Agrega más tuplas URL-mensaje aquí
-        ],
-        # Agrega más listas de URLs aquí
+        ]
+        #"16.58": [
+        #    ("https://www.express.com/clothing/women/upwest-cozy-leopard-socks/pro/80157165/color/ANIMAL%20PRINT/", "16.58"),
+        #    # Agrega más tuplas URL-mensaje aquí
+        #],
+        ## Agrega más listas de URLs aquí
     }
 
     urls_messages_selected = urls_messages[type] if type in urls_messages else list(urls_messages.values())[0]
 
     success = False  # Inicializa la variable de control
-    for url, message in urls_messages_selected:
-
+    while not success and urls_messages_selected:
+        url, message = random.choice(urls_messages_selected)
+        urls_messages_selected.remove((url, message))  # Elimina el par (url, message) seleccionado para no repetirlo
+    
         if success:  # Si la variable de control es True, rompe el bucle for
             break
         start_time = time.time()  # Guarda el tiempo de inicio
         try:
             while True:
-                mensaje(f"${type} Url: ${url}", COLOR_YELLOW)
+                mensaje(f"${type} : ${url}", COLOR_YELLOW)
                 mensaje(f"Procesando...", COLOR_YELLOW)
                 driver.get(url)
 
@@ -485,7 +487,6 @@ def express(card, date, cvv, type):
                     success = True  # romper el bucle for de urls si se encuentra el encabezado
                     break # Romper el bucle while si no se encuentra el encabezado
         except Exception:  # Puedes especificar el tipo de excepción si lo conoces
-            mensaje(f"Ocurrió un error con la URL {url}, intentando con la siguiente...", COLOR_RED)
             continue
 
 
